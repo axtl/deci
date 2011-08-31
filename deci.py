@@ -38,7 +38,7 @@ DESCRIPTION='Stripe data from one directory across a set of other directories'
 
 def _verify_args(ns):
     logging.debug('Verifying CLI arguments')
-    elif not os.path.exists(ns.input):
+    if not os.path.exists(ns.input):
         sys.stderr.write('Input directory does not exist\n')
         sys.exit(ERR['NO_INPUT'])
     if not ns.outputs:
