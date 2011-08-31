@@ -28,29 +28,12 @@ import os
 import shutil
 import sys
 import tempfile
-
 from zfec import filefec
 
+import common
+from common import ERR
+
 DESCRIPTION='Stripe data from one directory across a set of other directories'
-
-ERR = {
-    'NO_INPUT': 2,
-    'NO_OUTPUT': 3,
-    'NO_SHARES': 4,
-    'INSUF_OUTPUTS': 5,
-    'NO_OVERWRITE': 6,
-    'CHUNK_COUNT_MISMATCH': 7,
-}
-
-
-def _setup_logging(ns):
-    if ns.debug:
-        lvl = logging.DEBUG
-    elif ns.verbose:
-        lvl = logging.INFO
-    else:
-        lvl = logging.WARNING
-    logging.basicConfig(format='%(levelname)-8s %(message)s', level=lvl)
 
 
 def _verify_args(ns):
@@ -188,7 +171,7 @@ def main(argv):
     # create namespace with args
     ns = parser.parse_args(args=argv)
 
-    _setup_logging(ns)
+    common.setup_logging(ns)
     _verify_args(ns)
     _fec_encode(ns)
 
