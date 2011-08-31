@@ -6,7 +6,7 @@
 
 ## Usage Information
 
-* deci
+* **deci**
 
         $ ./deci.py -h
         usage: deci.py [-h] [-i IN_DIR] [-k SHARES] [-f] [-v] [-d]
@@ -28,7 +28,7 @@
           -v, --verbose         detailed output of operations
           -d, --debug           debug information
 
-* undeci
+* **undeci**
 
         $ /undeci.py -h
         usage: undeci.py [-h] [-o DIR] [-f] [-v] [-d] IN_DIR [IN_DIR ...]
@@ -46,6 +46,12 @@
           -d, --debug           debug information
 
 _**NOTE:** Due to what appears to be a bug in Python's argparse, some of the required arguments are listed as optional._
+
+## Dependencies
+
+The heavy lifting is performed by the [zfec][] library.  Refer to `requirements.txt` for a list of all dependencies (which can be installed via pip)
+
+[zfec]: http://tahoe-lafs.org/trac/zfec
 
 ## TODO
 
