@@ -15,6 +15,7 @@ ERR = {
 
 
 def setup_logging(ns):
+    """Setup logging infrastructure based on set flags"""
     if ns.debug:
         lvl = logging.DEBUG
     elif ns.verbose:
@@ -23,7 +24,14 @@ def setup_logging(ns):
         lvl = logging.WARNING
     logging.basicConfig(format='%(levelname)-8s %(message)s', level=lvl)
 
+
 def cleanup(tmpd):
+    """Log and remove the work directory"""
     logging.info('Cleaning up...')
     logging.debug('removing temp dir at %s' % tmpd)
     shutil.rmtree(tmpd)
+
+
+def fec_glob(f):
+    """Returns a glob path that will match fec files"""
+    return f + '.[0-9]*_[0-9]*.fec'
