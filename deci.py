@@ -113,7 +113,7 @@ def _fec_encode(ns):
                     logging.debug('exists: %s' % osubdir)
         for f in files:
             # glob on FEC output files to build list of things to distribute
-            gexpr = f + '.[0-9]*_[0-9]*.fec'
+            gexpr = common.fec_glob(f)
             gpath = os.path.join(tmpd, unrooted, gexpr)
             logging.debug('glob path for %s: %s' % (f, gpath))
             fecs = [os.path.basename(fec) for fec in glob.glob(gpath)]
