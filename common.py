@@ -11,6 +11,7 @@ ERR = {
     'INSUF_OUTPUTS': 5,
     'NO_OVERWRITE': 6,
     'CHUNK_COUNT_MISMATCH': 7,
+    'INSUF_SHARES': 8,
 }
 
 

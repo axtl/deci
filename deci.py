@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2011, alexandru totolici http://alexandrutotolici.com
+# Copyright (c) 2011, alexandru totolici http://alexandrutotolici.com @xorbyte
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -132,7 +132,7 @@ def _fec_encode(ns):
                     common.cleanup(tmpd)
                     sys.exit(ERR['NO_OVERWRITE'])
                 ifec = os.path.join(tmpd, unrooted, fec)
-                logging.debug('input fec for %s: %s' % (f, ifec))
+                logging.debug('input FEC for %s: %s' % (f, ifec))
                 shutil.copyfile(ifec, ofec)
                 logging.debug('wrote %s' % ofec)
 
