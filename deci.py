@@ -57,9 +57,9 @@ def _verify_args(ns):
         sys.stderr.write('Need more output directories than shares\n')
         sys.exit(ERR['INSUF_OUTPUTS'])
     logging.info('Will stripe %s to %s and require %d shares for \
-reconstruction' % (ns.input, repr(ns.outputs), ns.shares))
+reconstruction' % (ns.input, ns.outputs, ns.shares))
     logging.debug('input=%s' % ns.input)
-    logging.debug('outputs=%s' % repr(ns.outputs))
+    logging.debug('outputs=%s' % ns.outputs)
     logging.debug('shares=%d' % ns.shares)
     logging.debug('force=%s' % ns.force)
 
