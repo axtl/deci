@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import shutil
 
 ERR = {
     'NO_INPUT': 2,
@@ -21,3 +22,8 @@ def setup_logging(ns):
     else:
         lvl = logging.WARNING
     logging.basicConfig(format='%(levelname)-8s %(message)s', level=lvl)
+
+def cleanup(tmpd):
+    logging.info('Cleaning up...')
+    logging.debug('removing temp dir at %s' % tmpd)
+    shutil.rmtree(tmpd)

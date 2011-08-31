@@ -64,16 +64,18 @@ reconstruction' % (ns.input, ns.outputs, ns.shares))
     logging.debug('force=%s' % ns.force)
 
 
+def _make_output_dirs(ns):
+    for odir in ns.outputs:
+        if not os.path.exists(odir):
+            os.mkdir(odir)
+            logging.debug('created %s' % odir)
+
+
 def _fec_encode(ns):
     logging.info('FEC pass started')
 
     tmpd = tempfile.mkdtemp(dir=os.getcwd())
-    logging.debug('temp dir at %s' % tmpd)
-
-    def _cleanup():
-        logging.info('Cleaning up...')
-        logging.debug('removing temp dir at %s' % tmpd)
-        shutil.rmtree(tmpd)
+    logging.debug('created temp dir at %s' % tmpd)
 
     # total shares
     tshares = len(ns.outputs)
@@ -83,8 +85,9 @@ def _fec_encode(ns):
         od = root.replace(ns.input, os.path.basename(tmpd))
         # recreate tree structure in temp dir
         for dname in dirs:
-            os.mkdir(os.path.join(tmpd, dname))
-            logging.debug('created %s' % os.path.join(tmpd, dname))
+            osubdir = os.path.join(tmpd, dname)
+            os.mkdir(osubdir)
+            logging.debug('created %s' % osubdir)
         for f in files:
             fpath = os.path.join(root, f)
             logging.debug('processing file: %s' % fpath)
@@ -97,8 +100,8 @@ def _fec_encode(ns):
     logging.info('FEC pass completed')
     logging.info('Distribution pass started')
     for root, dirs, files in os.walk(ns.input):
-        # output dir, name mapping
-        od = root.replace(ns.input, os.path.basename(tmpd))
+        unrooted = os.path.relpath(root, ns.input)
+        logging.debug('unrooted path: %s' % unrooted)
         # map dir tree structure unto output directories
         for outdir in ns.outputs:
             for dname in dirs:
@@ -111,34 +114,30 @@ def _fec_encode(ns):
         for f in files:
             # glob on FEC output files to build list of things to distribute
             gexpr = f + '.[0-9]*_[0-9]*.fec'
-            logging.debug('glob expression for %s chunks=%s' % (f, gexpr))
-            # glob won't work if we don't cd into that dir first
-            ocwd = os.getcwd()
-            os.chdir(os.path.join(ocwd, od))
-            logging.debug('now in %s' % os.getcwd())
-            fecs = glob.glob(gexpr)
-            os.chdir(ocwd) # and we're back!
+            gpath = os.path.join(tmpd, unrooted, gexpr)
+            logging.debug('glob path for %s: %s' % (f, gpath))
+            fecs = [os.path.basename(fec) for fec in glob.glob(gpath)]
             logging.debug('FEC chunks for %s: %s' % (f, fecs))
             if len(fecs) != tshares:
                 logging.debug('len(fecs)=%d;shares=%d' % (len(fecs), tshares))
                 sys.stdout.write('Chunks and output dir counts mismatch\n')
-                _cleanup()
+                common.cleanup(tmpd)
                 sys.exit(ERR['CHUNK_COUNT_MISMATCH'])
             # spread chunks over output dirs
             for idx, fec in enumerate(fecs):
-                logging.debug('fec=%s idx=%s' % (fec, idx))
-                ofec = os.path.join(ns.outputs[idx], fec)
+                ofec = os.path.join(ns.outputs[idx], unrooted, fec)
                 if not ns.force and os.path.exists(ofec):
                     logging.debug('chunk collision: %s' % ofec)
                     sys.stderr.write('Some chunks with the same name exist\n')
-                    _cleanup()
+                    common.cleanup(tmpd)
                     sys.exit(ERR['NO_OVERWRITE'])
-                logging.debug('copy: %s to %s' % (fec, ns.outputs[idx]))
-                shutil.copyfile(os.path.join(od, fec), ofec)
+                ifec = os.path.join(tmpd, unrooted, fec)
+                logging.debug('input fec for %s: %s' % (f, ifec))
+                shutil.copyfile(ifec, ofec)
                 logging.debug('wrote %s' % ofec)
 
     logging.info('Distribution pass completed')
-    _cleanup()
+    common.cleanup(tmpd)
 
 
 def main(argv):
@@ -173,6 +172,7 @@ def main(argv):
 
     common.setup_logging(ns)
     _verify_args(ns)
+    _make_output_dirs(ns)
     _fec_encode(ns)
 
 
