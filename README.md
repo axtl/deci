@@ -1,6 +1,6 @@
 # deci (Directory Erasure Coding Interface)
 
-**deci** is a simple tool that will let you stripe all the data in one directory across a number of output directories and given a specified number of shares required for re-encoding.
+**deci** is a simple tool that will let you stripe all the data in one directory across a number of output directories and given a specified number of shares required for re-encoding, using [Reed-Solomon Erasure Coding][rsec].
 
 **undeci** is the reverse: it takes a list of directories and reconstructs the data to the specified output directory.
 
@@ -51,6 +51,7 @@ _**NOTE:** Due to what appears to be a bug in Python's argparse, some of the req
 
 The heavy lifting is performed by the [zfec][] library.  Refer to `requirements.txt` for a list of all dependencies (which can be installed via pip)
 
+[rsec]: http://en.wikipedia.org/wiki/Reed-Solomon
 [zfec]: http://tahoe-lafs.org/trac/zfec
 
 ## TODO
