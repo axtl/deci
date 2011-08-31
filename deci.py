@@ -38,15 +38,9 @@ DESCRIPTION='Stripe data from one directory across a set of other directories'
 
 def _verify_args(ns):
     logging.debug('Verifying CLI arguments')
-    if not ns.input:
-        sys.stderr.write('No input directory specified\n')
-        sys.exit(ERR['NO_INPUT'])
     elif not os.path.exists(ns.input):
         sys.stderr.write('Input directory does not exist\n')
         sys.exit(ERR['NO_INPUT'])
-    if not ns.shares:
-        sys.stderr.write('Please specify a number of shares for striping\n')
-        sys.exit(ERR['NO_SHARES'])
     if not ns.outputs:
         sys.stedrr.write('No output directories specified\n')
         sys.exit(ERR['NO_OUTPUT'])
@@ -144,6 +138,7 @@ def main(argv):
     # setup and parse arguments
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-i', '--input',
+        required=True,
         action='store',
         metavar='IN_DIR',
         help='directory to stripe across output directories')
@@ -153,6 +148,7 @@ def main(argv):
         nargs='+',
         help='a directory to strip TO')
     parser.add_argument('-k', '--shares',
+        required=True,
         action='store',
         type=int,
         help='the number of shares to use for striping (must be smaller than\

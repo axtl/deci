@@ -39,12 +39,6 @@ DESCRIPTION='Rebuild directory from striped data'
 
 def _verify_args(ns):
     logging.debug('verifying CLI arguments')
-    if not ns.output:
-        sys.stderr.write('No output directory specified\n')
-        sys.exit(ERR['NO_OUTPUT'])
-    if not ns.inputs:
-        sys.stderr.write('No input directories specified\n')
-        sys.exit(ERR['NO_INPUT'])
     if not ns.force and os.path.exists(ns.output):
         sys.stderr.write('Destination exists\n')
         sys.exit(ERR['NO_OVERWRITE'])
@@ -103,6 +97,7 @@ def main(argv):
     # setup and parse arguments
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-o', '--output',
+        required=True,
         action='store',
         metavar='DIR',
         help='the output directory where files will be rebuilt')
